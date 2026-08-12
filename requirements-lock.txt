@@ -1,0 +1,10 @@
+# Exact versions used to produce the published results.
+pandas==2.3.2
+numpy==2.3.3
+scipy==1.16.2
+matplotlib==3.10.6
+scikit-learn==1.7.2
+statsmodels==0.14.6
+openai==2.0.0
+python-dotenv==1.1.1
+requests==2.32.5

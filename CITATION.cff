@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+title: "Toward automated meta-analysis of white-matter research: an ontology-guided benchmark for large language models"
+message: "If you use this benchmark, please cite the paper."
+type: software
+license: MIT
+authors:
+  - family-names: Kiilu
+    given-names: Stephen
+    affiliation: "Department of Psychology, The University of Texas at Austin, Austin, Texas, USA"
+  - family-names: Ray
+    given-names: Kimberly L.
+    affiliation: "Department of Psychology, The University of Texas at Austin, Austin, Texas, USA"
+  - family-names: Leigh
+    given-names: Austin J.
+    affiliation: "Department of Psychology, The University of Texas at Austin, Austin, Texas, USA"
+  - family-names: Pestilli
+    given-names: Franco
+    affiliation: "Department of Psychology and Department of Neuroscience, Center for Perceptual Systems, Center for Learning and Memory, The University of Texas at Austin, Austin, Texas, USA"
+keywords:
+  - white matter tracts
+  - large language models
+  - information extraction
+  - neuroimaging
+  - meta-analysis
