@@ -86,9 +86,12 @@ annotations only — see [data/README.md](data/README.md) for the data dictionar
 
 ## Lookup table
 
-`data/whitematter_lut.csv` holds 313 white-matter tract terms derived from
-Uberon and SNOMED CT. `prompts/with_lut.py` renders the file into the system
-prompt at run time, so the published table is exactly the one the models saw.
+`data/whitematter_lut.csv` holds 313 entries (311 unique): white-matter tract
+names together with their ontology synonyms, Latin variants and abbreviations
+drawn from Uberon and SNOMED CT, plus a `Global` label for analyses treating
+white matter as a single unit. `prompts/with_lut.py` renders the file into the
+system prompt at run time, so the published table is exactly the one the models
+saw.
 
 ## What is not included
 
@@ -116,5 +119,5 @@ See [CITATION.cff](CITATION.cff).
 
 ## License
 
-MIT for code; CC BY 4.0 for `data/whitematter_dataset.csv` and
-`data/whitematter_lut.csv`. See [LICENSE](LICENSE).
+MIT for code, see [LICENSE](LICENSE). The files in `data/` are CC BY 4.0,
+see [LICENSE-DATA](LICENSE-DATA).
