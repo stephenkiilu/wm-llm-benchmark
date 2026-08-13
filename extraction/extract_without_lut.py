@@ -66,20 +66,20 @@ SECTION_MAP: Dict[ProcessingMode, Tuple[bool, List[str]]] = {
 }
 
 
-# ── Extraction fields ──────────────────────────────────────────────────────────
+# Extraction fields 
 EXTRACTION_FIELDS = [
     "whitematter_tracts"]
 
 CSV_FIELDNAMES = ["PMID", "title"] + EXTRACTION_FIELDS
 
-# ── Load data ──────────────────────────────────────────────────────────────────
+# Load data
 def load_papers() -> Dict[str, Any]:
     """Load the paper corpus. Full text is not distributed; see data/README.md."""
     with open(WHITEMATTER_JSON_PATH, "r", encoding="utf-8") as f:
         return json.load(f)
 
 
-# ── Helper utilities ───────────────────────────────────────────────────────────
+# Helper utilities
 
 def _get_paper_field(paper: Dict[str, Any], field: str) -> str:
     """Extract and convert a paper field to string, handling None values.
