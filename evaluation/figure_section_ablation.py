@@ -21,7 +21,7 @@ OUT_PATH = os.path.join(BASE_DIR, "results", "figures", "section_ablation.png")
 S.apply_style()
 
 
-# ---- config -----------------------------------------------------------------
+# config 
 SECTION_ORDER = [
     "Abstract", "Methods", "Results", "Discussion",
     "Abstract+Methods", "Abstract+Results", "Abstract+Discussion",
@@ -52,15 +52,13 @@ TITLE = "Variable-Level Extraction F1 by Source Section"
 XLABEL = "F1 Score (95% CI)"
 YLABEL = "Source Section(s)"
 
-# F1 axis range. Data spans ~0.28-1.0, so starting at 0.2 keeps the differences
-# between section combinations readable; ticks are min / midpoint / max.
 X_MIN, X_MAX = 0.2, 1.0
 
-# ---- load -------------------------------------------------------------------
+# load 
 df = pd.read_csv(CSV_PATH)
 df = df[df["section"].isin(SECTION_ORDER)].copy()
 
-# ---- plot -------------------------------------------------------------------
+# plot
 fig, axes = plt.subplots(2, 3, figsize=(13, 9), sharey=True)
 axes = axes.ravel()
 y = np.arange(len(SECTION_ORDER))
@@ -80,7 +78,6 @@ for i, (ax, field) in enumerate(zip(axes, FIELDS)):
 
     # Panel titles stay regular weight; only the figure title is bold.
     S.label_axes(ax, title=SHORT[field], panel=True)
-    # F1 axis stops exactly at 1.0, ticks at 0.2 / 0.6 / 1.
     S.three_ticks(ax, X_MIN, X_MAX, axis="x")
     S.square_axes(ax)
     ax.grid(axis="x")

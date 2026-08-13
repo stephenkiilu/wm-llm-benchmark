@@ -88,7 +88,7 @@ def best_semantic_match(pred: str, refs: List[str], cmap: Dict[str, str],
         return best_ref, best_score
     return None, best_score
 
-# ── CANONICAL MAPS ────────────────────────────────────────────────────────────
+# CANONICAL MAPS
 canon_dti      = normalize_cmap_keys_values({"yes": "yes", "no": "no"})
 canon_human    = normalize_cmap_keys_values({"yes": "yes", "no": "no", "human": "yes"})
 canon_dementia = normalize_cmap_keys_values({"yes": "yes", "no": "no"})
@@ -119,7 +119,7 @@ canon_white_matter_tracts = normalize_cmap_keys_values({
     "cc- corpus callosum": "corpus callosum",
 })
 
-# ── FIELD DEFINITIONS ─────────────────────────────────────────────────────────
+# FIELD DEFINITIONS
 binary_fields = [
     ("Does it use DTI?",                     "DTI_gt",           "DTI_pred",           canon_dti,      "yes"),
     ("Human_vs_non_human_study",             "Human_study_gt",   "Human_study_pred",   canon_human,    "yes"),
@@ -136,7 +136,7 @@ all_fields_for_norm = [
     (n, g, p, c) for (n, g, p, c, *_) in binary_fields
 ] + multilabel_fields
 
-# ── METRIC FUNCTIONS ──────────────────────────────────────────────────────────
+# METRIC FUNCTIONS
 def _jaccard_binary(y_true: List[int], y_pred: List[int]) -> float:
     vals = [1.0 if yt == yp else 0.0 for yt, yp in zip(y_true, y_pred)]
     return float(np.mean(vals)) if vals else 0.0
@@ -217,7 +217,7 @@ def compute_multilabel_metrics(preds, refs) -> Dict:
         labels=labels, n_samples=len(preds),
     )
 
-# ── METRIC HELPERS FOR BOOTSTRAPPING ──────────────────────────────────────────
+# METRIC HELPERS FOR BOOTSTRAPPING 
 def compute_f1_binary(y_true, y_pred) -> float:
     return f1_score(y_true, y_pred, zero_division=0)
 
@@ -251,7 +251,7 @@ def sig_symbol(p: float) -> str:
     else:
         return ""      # Not significant
 
-# ── EVALUATE ONE MODEL ────────────────────────────────────────────────────────
+# EVALUATE ONE MODEL
 def evaluate_model(pred_path: str, model_label: str) -> Tuple[pd.DataFrame, Dict]:
     """
     Run the full evaluation pipeline for a single model and return:
@@ -324,7 +324,7 @@ def evaluate_model(pred_path: str, model_label: str) -> Tuple[pd.DataFrame, Dict
                 )
     df = df_norm
 
-    # ── Binary evaluation ─────────────────────────────────────────────────────
+    # Binary evaluation
     binary_predictions = {name: {"y_true": [], "y_pred": []}
                           for name, *_ in binary_fields}
     for _, row in df.iterrows():
@@ -367,7 +367,7 @@ def evaluate_model(pred_path: str, model_label: str) -> Tuple[pd.DataFrame, Dict
         d = multilabel_predictions[name]
         multilabel_results[name] = compute_multilabel_metrics(d["predictions"], d["references"])
 
-    # ── Build combined F1 rows ────────────────────────────────────────────────
+    # Build combined F1 rows
     rows = []
     for name, r in binary_results.items():
         rows.append({"field": name, "f1": round(r["f1"], 3), "model": model_label})
@@ -391,14 +391,14 @@ def evaluate_model(pred_path: str, model_label: str) -> Tuple[pd.DataFrame, Dict
 
     return pd.DataFrame(rows), raw_data_dict
 
-# ── EVALUATE BOTH MODELS ──────────────────────────────────────────────────────
+# EVALUATE BOTH MODELS 
 results_gpt4, raw_gpt4 = evaluate_model(DATA_GPT_4o_mini, "GPT-4")
 results_gpt5, raw_gpt5 = evaluate_model(DATA_GPT_5_mini,  "GPT-5")
 
 comparison_df = pd.concat([results_gpt4, results_gpt5], ignore_index=True)
 
 
-# ── PAIRED BOOTSTRAP SIGNIFICANCE TESTING ─────────────────────────────────────
+# PAIRED BOOTSTRAP SIGNIFICANCE TESTING
 def paired_bootstrap_testing(raw_gpt4: Dict, raw_gpt5: Dict, comparison_df: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame, Dict]:
     # Extract field names
     fields = comparison_df["field"].unique().tolist()

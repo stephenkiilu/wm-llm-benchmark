@@ -135,7 +135,7 @@ def _flatten_section_dict(section_data: Dict[str, Any]) -> str:
     return "\n".join(parts)
 
 
-# ── Payload builder ───────────────────────────────────────────────────────────
+# Payload builder
 
 def _build_payload(paper: Dict[str, Any],
                    include_abstract: bool,
@@ -167,7 +167,7 @@ def prepare_payload(paper: Dict[str, Any], mode: ProcessingMode) -> str:
     return _build_payload(paper, include_abstract, section_keys)
 
 
-# ── Async API interaction ─────────────────────────────────────────────────────
+# Async API interaction
 
 async def _process_chunk_with_api_async(chunk: str, model: str,
                                         max_retries: int = 5,
@@ -225,7 +225,7 @@ def _merge_chunk_results(all_data: Dict[str, List], chunk_result: Dict[str, Any]
             all_data[key].append(value)
 
 
-# ── Single-paper extraction (async) ───────────
+# Single-paper extraction (async)
 
 async def extract_one_async(WM_paper: Dict[str, Any],
                             model: str = "gpt-5-mini",
@@ -254,7 +254,7 @@ async def extract_one_async(WM_paper: Dict[str, Any],
     return all_data
 
 
-# ── CSV helpers ───────────────────────
+# CSV helpers
 
 def _build_csv_row(paper: Dict[str, Any], extracted_data: Dict[str, List]) -> Dict[str, str]:
     """Build a CSV row from paper metadata and extracted data."""
@@ -287,7 +287,7 @@ def _load_completed_pmids(csv_path: str) -> Set[str]:
     return completed
 
 
-# ── Async batch extraction with progressive CSV writing ───────────────────────
+# Async batch extraction with progressive CSV writing
 
 async def _process_single_paper(paper: Dict[str, Any],
                                 index: int,
@@ -374,8 +374,7 @@ async def extract_all_async(WM_papers: List[Dict[str, Any]],
     print(f"\n✅ Successfully saved {len(results)} new records to {out_csv}")
     return results
 
-# ── Entry point ────────────────────────────────────────────────────────────────
-
+# Entry point
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Async entity extraction from papers by section (modes 1–14).")
     parser.add_argument("--mode", type=int, required=True, choices=range(1, 15),

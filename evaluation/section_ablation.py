@@ -33,7 +33,7 @@ DATA_RAW = os.path.join(BASE_DIR, "data", "whitematter_dataset.csv")
 OUTPUT_DIR = os.path.join(BASE_DIR, "predictions", "no_lut")
 TABLES_DIR = os.path.join(BASE_DIR, "results", "tables")
 
-# ── SECTION DEFINITIONS ───────────────────────────────────────────────────────
+# SECTION DEFINITIONS 
 SECTION_CSVS = {
     # Single sections
     "Abstract":                   "GPT_section_ABSTRACT_GPT_5.csv",
@@ -58,7 +58,7 @@ SECTION_CSVS = {
 
 BENCHMARK_SECTION = "Full Text"
 
-# ── TEXT NORMALIZATION & HELPERS ──────────────────────────────────────────────
+# TEXT NORMALIZATION & HELPERS
 EMPTY_TOKENS = {
     "", "none", "n.a.", "na", "n a", "n/a", "null", "_", "-", "nan",
     "not reported", "unknown",
@@ -139,7 +139,7 @@ canon_white_matter_tracts = normalize_cmap_keys_values({
     "cc- corpus callosum": "corpus callosum",
 })
 
-# ── FIELD DEFINITIONS ─────────────────────────────────────────────────────────
+# FIELD DEFINITIONS
 binary_fields = [
     ("DTI Methodology [Y/N]", "DTI_gt", "DTI_pred", canon_dti, "yes"),
     ("Subject Species [Human/Other]", "Human_study_gt", "Human_study_pred", canon_human, "yes"),
@@ -173,7 +173,7 @@ def compute_multilabel_f1(preds: List[List[str]], refs: List[List[str]]) -> floa
     if Y_true.size == 0: return 0.0
     return f1_score(Y_true, Y_pred, average="micro", zero_division=0)
 
-# ── GROUND TRUTH & PRED COLUMN RENAME MAPS ────────────────────────────────────
+# GROUND TRUTH & PRED COLUMN RENAME MAPS
 GT_RENAME = {
     "Is this DTI?": "DTI_gt",
     "Is this a single study or a review?": "Study_type_gt",
@@ -188,7 +188,7 @@ PRED_RENAME = {
 }
 
 
-# ── RAW DATA EXTRACTION FOR BOOTSTRAPPING ───────────────────────────
+# RAW DATA EXTRACTION FOR BOOTSTRAPPING
 def get_section_raw_data(section_label: str, pred_csv: str) -> Dict[str, Dict[str, any]]:
     pred_path = os.path.join(OUTPUT_DIR, pred_csv)
     golden_data = pd.read_csv(DATA_RAW)
@@ -235,7 +235,7 @@ def get_section_raw_data(section_label: str, pred_csv: str) -> Dict[str, Dict[st
     return raw_data
 
 
-# ── EVALUATION & BOOTSTRAPPING LOGIC ──────────────────────────────────────────
+# EVALUATION & BOOTSTRAPPING LOGIC 
 def compute_f1_from_raw(field_data: Dict[str, any], indices: np.ndarray) -> float:
     if field_data["type"] == "binary":
         return compute_binary_f1(field_data["y_true"][indices], field_data["y_pred"][indices])
@@ -325,7 +325,7 @@ def bootstrap_and_test() -> pd.DataFrame:
             
     df_res = pd.DataFrame(results)
     
-    # ── PAIRED BOOTSTRAP P-VALUE VS FULL TEXT ──────────────────────────────
+    #PAIRED BOOTSTRAP P-VALUE VS FULL TEXT 
     # Method: in each bootstrap iteration the SAME paper-rows are used for both
     # the section and Full Text, so we compute per-iteration differences.
     # p-value tests whether the difference is significantly different from 0
@@ -391,7 +391,7 @@ def bootstrap_and_test() -> pd.DataFrame:
     return df_res, boot_dists
 
 
-# ── RUN PIPELINE & PLOTTING ────────────
+# RUN PIPELINE & PLOTTING
 # %%
 results_df, boot_dists = bootstrap_and_test()
 
@@ -402,7 +402,7 @@ results_csv_path = os.path.join(TABLES_DIR, "section_ablation.csv")
 results_df.to_csv(results_csv_path, index=False)
 print(f"\nSaved detailed summary to: {results_csv_path}")
 
-# ── SAVE RAW BOOTSTRAP DISTRIBUTIONS TO CSV ───────────────────────────────────
+# SAVE RAW BOOTSTRAP DISTRIBUTIONS TO CSV
 print("\n" + "=" * 70)
 print("SAVING BOOTSTRAP DISTRIBUTIONS (FOR PLOTTING)")
 print("=" * 70)

@@ -32,11 +32,10 @@ script runs without them. To set them, copy `.env.example` to `.env` and fill
 in:
 
 ```
-NCBI_EMAIL=you@example.edu
+NCBI_EMAIL=you@email.com
 NCBI_API_KEY=          # https://account.ncbi.nlm.nih.gov/settings/
 ```
-
-`.env` is gitignored. Plain environment variables work too.
+Plain environment variables work too.
 
 ## Not included: article full text
 

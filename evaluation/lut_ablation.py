@@ -31,7 +31,7 @@ GPT4_LUT = os.path.join(BASE_DIR, "predictions", "lut_ablation", "whitematter_fu
 GPT5_LUT = os.path.join(BASE_DIR, "predictions", "lut_ablation", "whitematter_fulltext_GPT_5.csv")
 OUT_TABLE = os.path.join(BASE_DIR, "results", "tables", "lut_ablation.csv")
 
-# ── TEXT NORMALIZATION ─────────────────────────────────────────────────────────
+# TEXT NORMALIZATION
 EMPTY_TOKENS = {
     "", "none", "n.a.", "na", "n a", "n/a", "null", "_", "-", "nan",
     "not reported", "unknown",
@@ -82,7 +82,7 @@ def best_semantic_match(pred: str, refs: List[str], cmap: Dict[str, str],
             best_score, best_ref = score, r_can
     return (best_ref, best_score) if best_score >= thresh else (None, best_score)
 
-# ── WMT CANONICAL MAP ─────────────────────────────────────────────────────────
+# WMT CANONICAL MAP
 canon_wmt = normalize_cmap({
     "corpus callosum": "corpus callosum",
     "corpus callosum - splenium": "corpus callosum - splenium",
@@ -99,10 +99,10 @@ canon_wmt = normalize_cmap({
     "uncinate fasc.": "uncinate fasciculus",
     "slf": "superior longitudinal fasciculus",
     "cc": "corpus callosum",
-    "cc- corpus callosum": "corpus callosum",
+    "cc- corpus callosum": "corpus callosum",   
 })
 
-# ── METRIC HELPERS ────────────────────────────────────────────────────────────
+# METRIC HELPERS
 def _jaccard_samples(preds, refs) -> float:
     vals = []
     for p, r in zip(preds, refs):
@@ -130,7 +130,7 @@ def compute_wmt_f1(preds: List[List[str]], refs: List[List[str]]) -> float:
 
     return float(f1_score(Y_true, Y_pred, average="micro", zero_division=0))
 
-# ── EVALUATE ONE MODEL (WMT only) ─────────────────────────────────────────────
+# EVALUATE ONE MODEL (WMT only) 
 def evaluate_model(pred_path: str, model_label: str) -> Tuple[float, List[List[str]], List[List[str]]]:
     """
     Load predictions, match against ground truth on the WM Tracts field,
@@ -201,13 +201,13 @@ def evaluate_model(pred_path: str, model_label: str) -> Tuple[float, List[List[s
     print(f"  WMT micro-F1 = {micro_f1:.3f}")
     return micro_f1, predictions, references
 
-# ── RUN ALL FOUR CONDITIONS ───────────────────────────────────────────────────
+# RUN ALL FOUR CONDITIONS 
 f1_gpt4_no_lut, preds_gpt4_no, refs_gpt4_no = evaluate_model(GPT4_no_LUT, "GPT-4  No LUT")
 f1_gpt4_lut, preds_gpt4_lut, refs_gpt4_lut  = evaluate_model(GPT4_LUT,    "GPT-4  With LUT")
 f1_gpt5_no_lut, preds_gpt5_no, refs_gpt5_no = evaluate_model(GPT5_no_LUT, "GPT-5  No LUT")
 f1_gpt5_lut, preds_gpt5_lut, refs_gpt5_lut  = evaluate_model(GPT5_LUT,    "GPT-5  With LUT")
 
-# ── BOOTSTRAP PAIRED SIGNIFICANCE TESTING ─────────────────────────────────────
+# BOOTSTRAP PAIRED SIGNIFICANCE TESTING 
 
 print("\n" + "=" * 60)
 print(f"RUNNING PAIRED BOOTSTRAP ({N_BOOT} iterations)...")
