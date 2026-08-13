@@ -29,7 +29,7 @@ WHITEMATTER_JSON_PATH = os.path.join(BASE_DIR, "data", "WMT_FULLDATA.json")
 OUTPUT_DIR = os.path.join(BASE_DIR, "predictions", "lut_ablation")
 
 
-# ── Processing modes ──────────
+# Processing modes 
 class ProcessingMode(IntEnum):
     ABSTRACT                    = 1
     METHODS                     = 2
@@ -70,20 +70,20 @@ SECTION_MAP: Dict[ProcessingMode, Tuple[bool, List[str]]] = {
 ALL_MODES = list(ProcessingMode)
 
 
-# ── Extraction fields ──────────────────────────────────────────────────────────
+# Extraction fields
 EXTRACTION_FIELDS = [
     "whitematter_tracts", "study_type","DTI_study","Human_study","Dementia_study","Disease_study"]
 
 CSV_FIELDNAMES = ["PMID", "title"] + EXTRACTION_FIELDS
 
-# ── Load data ──────────────────────────────────────────────────────────────────
+# Load data 
 def load_papers() -> Dict[str, Any]:
     """Load the paper corpus. Full text is not distributed; see data/README.md."""
     with open(WHITEMATTER_JSON_PATH, "r", encoding="utf-8") as f:
         return json.load(f)
 
 
-# ── Helper utilities ───────────────────────────────────────────────────────────
+# Helper utilities
 
 def _get_paper_field(paper: Dict[str, Any], field: str) -> str:
     """Extract and convert a paper field to string, handling None values.
@@ -121,7 +121,6 @@ def _get_section_text(paper: Dict[str, Any], section_key: str) -> str:
     if isinstance(section, str):
         return section
     if isinstance(section, dict):
-        # Collect text from the section and its subsections recursively
         return _flatten_section_dict(section)
     return str(section)
 
@@ -140,7 +139,7 @@ def _flatten_section_dict(section_data: Dict[str, Any]) -> str:
     return "\n".join(parts)
 
 
-# ── Payload builder ───────────────────────────────────────────────────────────
+# Payload builder
 
 def _build_payload(paper: Dict[str, Any],
                    include_abstract: bool,
@@ -188,7 +187,7 @@ def prepare_payload(paper: Dict[str, Any], mode: ProcessingMode) -> str:
 
 
 
-# ── API interaction ────────────────────────────────────────────────────────────
+# API interaction
 
 def _process_chunk_with_api(chunk: str, model: str) -> Dict[str, Any]:
     """Send a text chunk to the OpenAI API and parse the JSON response."""
@@ -225,7 +224,7 @@ def _merge_chunk_results(all_data: Dict[str, List], chunk_result: Dict[str, Any]
             all_data[key].append(value)
 
 
-# ── Single-paper extraction ────────────────────────────────────────────────────
+# Single-paper extraction 
 
 def extract_one(WM_paper: Dict[str, Any],
                 model: str = "gpt-5-mini",
@@ -254,7 +253,7 @@ def extract_one(WM_paper: Dict[str, Any],
     return all_data
 
 
-# ── CSV helpers ────────────────────────────────────────────────────────────────
+# CSV helpers
 
 def _build_csv_row(paper: Dict[str, Any], extracted_data: Dict[str, List]) -> Dict[str, str]:
     """Build a CSV row from paper metadata and extracted data."""
@@ -281,7 +280,7 @@ def _output_csv_path(mode: ProcessingMode, model: str = "GPT_5") -> str:
     return f"{OUTPUT_DIR}/GPT_section_{mode_label}_{model}.csv"
 
 
-# ── Batch extraction ───────────────────────────────────────────────────────────
+# Batch extraction
 
 def extract_all(WM_papers: List[Dict[str, Any]],
                 out_csv: str | None = None,
@@ -325,7 +324,7 @@ def extract_all(WM_papers: List[Dict[str, Any]],
     return results
 
 
-# ── Entry point ────────────────────────────────────────────────────────────────
+# Entry point
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Extract entities from papers by section.")

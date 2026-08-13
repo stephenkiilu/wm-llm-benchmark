@@ -5,7 +5,7 @@ House rules:
     2. both axes are labelled
     3. one font family and one size scale across all figures
     4. the title is the ONLY bold text
-    5. every figure is written as PNG (raster) and SVG (vector)
+    5. every figure is written as PNG
     6. the plotting box is square - x and y axis lengths are equal
     7. numeric axes show exactly three ticks: min, midpoint, max
     8. numeric axes stop exactly at the maximum - no overhang past the last tick
@@ -27,8 +27,7 @@ import os
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
-# ── MODEL COLOURS ────────────────────────────────────────────────────────────
-# Keep GPT-5 blue and GPT-4 red everywhere.
+#MODEL COLOURS
 GPT5_BLUE = "#5B8FF9"
 GPT4_RED = "#EF553B"
 
@@ -37,32 +36,17 @@ MODEL_COLORS = {
     "GPT-4": GPT4_RED,
 }
 
-# Marker shape per model, for figures where colour encodes something else (e.g.
-# the extraction variable) and shape has to carry the model.
 MODEL_MARKERS = {
     "GPT-4": "s",   # square
     "GPT-5": "o",   # circle
 }
 
-# Neutral greys used for error bars, grids, significance marks and footnotes.
 INK = "#333333"
 GREY = "#555555"
 MUTED = "#777777"
 GRID = "#DDDDDD"
-
-# ── TYPOGRAPHY ───────────────────────────────────────────────────────────────
-# One family, one size scale. Helvetica Neue first, then Arial and the rest as
-# fallbacks so the figures still render on machines without it.
-#
-# macOS ships Helvetica Neue as a .ttc *collection*, and matplotlib registers only
-# the first face in a collection - so a bold request silently comes back with the
-# regular face and every "bold" renders at normal weight, which quietly breaks
-# house rule 4. _register_helvetica_neue splits the faces we use out of the
-# collection, into matplotlib's own cache directory (never into the repo: the font
-# is Apple-licensed), and registers each one so real weights are available.
 HELVETICA_TTC = "/System/Library/Fonts/HelveticaNeue.ttc"
 _TTC_FACES = {0: "Regular", 1: "Bold", 2: "Italic", 3: "BoldItalic"}
-
 
 def _register_helvetica_neue(ttc: str = HELVETICA_TTC) -> bool:
     """Register real Helvetica Neue weights with matplotlib. True if available."""
@@ -105,10 +89,6 @@ FS_VALUE = 10         # in-bar value labels
 FS_ANNOT = 10         # significance stars, callouts
 FS_NOTE = 9.5         # footnotes (p-value key, etc.)
 FS_INSET = 8          # inset axes: ticks, title, in-plot milestone labels
-
-# Panel letters (A, B, C ...) identify panels rather than annotate data, so they
-# sit at title level. Flip to "normal" here if a strict no-bold-but-title read is
-# wanted.
 PANEL_LETTER_WEIGHT = "bold"
 FS_PANEL_LETTER = 14
 
@@ -132,21 +112,21 @@ def model_color(label: str) -> str:
 def apply_style() -> None:
     """Install the house rcParams. Call once, before creating any figure."""
     plt.rcParams.update({
-        # -- font: one family, one size scale ------------------------------
+        # -- font: one family, one size scale 
         "font.family": "sans-serif",
         "font.sans-serif": FONT_STACK,
         "font.size": FS_TICK,
         "font.weight": "normal",
         "mathtext.default": "regular",
 
-        # -- titles: the only bold text ------------------------------------
+        # -- titles: the only bold text 
         "axes.titlesize": FS_TITLE,
         "axes.titleweight": "bold",
         "axes.titlepad": 10,
         "figure.titlesize": FS_TITLE,
         "figure.titleweight": "bold",
 
-        # -- everything else stays regular weight --------------------------
+        # -- everything else stays regular weight -
         "axes.labelsize": FS_LABEL,
         "axes.labelweight": "normal",
         "axes.labelcolor": "black",
@@ -157,7 +137,7 @@ def apply_style() -> None:
         "figure.labelsize": FS_LABEL,
         "figure.labelweight": "normal",
 
-        # -- frame / grid --------------------------------------------------
+        # -- frame / grid 
         "axes.edgecolor": INK,
         "axes.linewidth": 0.8,
         "axes.spines.top": False,
@@ -168,12 +148,12 @@ def apply_style() -> None:
         "xtick.direction": "out",
         "ytick.direction": "out",
 
-        # -- output: crisp raster + editable vector ------------------------
+        # -- output: crisp raster + editable vector 
         "figure.dpi": 110,
         "savefig.dpi": 300,
         "savefig.bbox": "tight",
         "savefig.facecolor": "white",
-        "svg.fonttype": "none",   # keep SVG text as text (editable in Illustrator)
+        "svg.fonttype": "none",   
         "pdf.fonttype": 42,
         "ps.fonttype": 42,
     })
@@ -307,7 +287,6 @@ def save_figure(fig, out_path, dpi=300, also_pdf=False, close=True):
     print("saved " + " + ".join(os.path.basename(p) for p in written)
           + f"  ->  {parent or '.'}")
     return written
-
 
 # Applying the style at import time means any script that pulls MODEL_COLORS
 # from here also picks up the shared typography.

@@ -33,8 +33,6 @@ OUT_PNG = os.path.join(BASE_DIR, "results", "figures", "lut_complexity.png")
 comp = CX.comp
 short = U.SHORT_NAMES
 var_colors = U.VARIABLE_COLORS
-# "GPT-4"/"GPT-5" are the pipeline's keys; the figure shows the full model names,
-# matching the captions. Same mapping the bar figures use.
 display = U.DISPLAY_NAMES
 markers = S.MODEL_MARKERS
 WMT = "WM tracts studied"
@@ -65,15 +63,6 @@ F1_WITH_LUT = {m: s.copy() for m, s in F1_NO_LUT.items()}
 for m in ("GPT-4", "GPT-5"):
     F1_WITH_LUT[m][WMT] = WITH_LUT[m]
 
-# ---------------------------------------------------------------------------
-# Typography. 1.9 is figure_AB_final's scale, so the two figures carry identical
-# type. Sized for the page rather than the screen: dropped into a Google Doc (or
-# any single-column layout) the figure is scaled to the ~6.5 in text width, which
-# divides every point size by 2.4 - so 1.45 printed 6.7 pt ticks against the
-# document's 11 pt body text, and 1.9 prints 8.8 pt. Enlarging the canvas would
-# make that worse, not better: the wider the canvas, the harder the page scales it
-# down. What matters is points per canvas inch.
-# ---------------------------------------------------------------------------
 FONT_SCALE = 1.9
 FONT_STACK = [f for f in S.FONT_STACK if f != "Helvetica Neue"]   # Arial, as figure AB
 FS_TITLE = S.FS_TITLE * FONT_SCALE
@@ -99,16 +88,10 @@ plt.rcParams.update({
 })
 
 LUT_HATCH = "///"
-# Scatter `s` is area, so the printed symbol diameter goes as its square root:
-# 520 is 2x the linear size of the 130 used before (sqrt(520/130) = 2), which is
-# what it takes for the shape (square vs circle) to stay legible once the page
-# scales the figure to column width. LEGEND_MS is the matching diameter in points,
-# kept in step so the key and the data show the same symbol.
 MARKER_SIZE = 520
 LEGEND_MS = 20
 
 fig, (axA, axB, axC) = plt.subplots(1, 3, figsize=(15.5, 7.4))
-
 
 def label_panel(ax, title, xlabel, ylabel):
     S.label_axes(ax, title=title, xlabel=xlabel, ylabel=ylabel, panel=True)
@@ -163,8 +146,6 @@ S.three_ticks(axA, 0.0, 1.0, axis="y")
 S.flush_category_axis(axA, x[0] - BAR_W, x[-1] + BAR_W)
 S.square_axes(axA)
 axA.grid(axis="y", linestyle="--", alpha=0.3)
-# Colour is the model (also on the x-axis); the hatch is the only thing the
-# legend has to decode, so it is small enough to sit inside the panel.
 axA.legend(handles=[Patch(facecolor="#8A8A8A", edgecolor="white", label="No LUT"),
                     Patch(facecolor="#8A8A8A", edgecolor="black",
                           hatch=LUT_HATCH, label="With LUT")],
@@ -193,26 +174,17 @@ for ax, f1, tag, panel_title in (
                        color=var_colors[field], edgecolor="white", linewidth=1.4,
                        zorder=3, clip_on=False)
 
-    # No in-plot variable labels: every variable is already named in the shared
-    # legend below, and repeating two of them on the points only added text that
-    # crowded the marker cluster.
     label_panel(ax, panel_title, "Task complexity", "F1 Score")
     S.three_ticks(ax, 0.0, 1.0, axis="both")
     S.share_origin_label(ax, keep="y")
     S.square_axes(ax)
     ax.grid(axis="y", alpha=0.25, lw=0.6)
 
-# Printed as a diagnostic only. The no-LUT values are the ones the caption quotes;
-# the with-LUT rho is deliberately not reported - see the note in the docstring.
 for tag in ("no LUT", "with LUT"):
     for m in models:
         r, p = rho[(tag, m)]
         print(f"{tag:9s} {m}: Spearman rho={r:+.3f}, p={p:.4f}")
 
-# ---------------------------------------------------------------------------
-# One shared legend for B and C instead of a copy inside each: at this size two
-# six-entry legends would take more of those boxes than the data does.
-# ---------------------------------------------------------------------------
 var_handles = [Patch(facecolor=var_colors[f], edgecolor="none", label=short[f])
                for f in comp.sort_values("complexity").index]
 model_handles = [
@@ -224,7 +196,7 @@ model_handles = [
 
 fig.suptitle("Look-up table grounding and task complexity", fontsize=FS_TITLE,
              y=0.985)
-fig.tight_layout(rect=[0, 0.16, 1, 0.95])   # room for the shared legend strip
+fig.tight_layout(rect=[0, 0.16, 1, 0.95])  
 fig.canvas.draw()
 
 # Centred under panels B and C, which are what it describes.

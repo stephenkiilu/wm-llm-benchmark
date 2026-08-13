@@ -3,6 +3,10 @@
 Regenerates data/publication_counts.csv, which figure_publication_growth.py
 reads. Hits the live NCBI E-utilities API.
 
+Optional settings, read from .env or the environment:
+    NCBI_EMAIL    contact address sent with each request (NCBI courtesy)
+    NCBI_API_KEY  raises the rate limit from 3 to 10 requests/second
+
 Output: data/publication_counts.csv
 """
 
@@ -11,14 +15,20 @@ import os
 import time
 
 import requests
+from dotenv import load_dotenv
+
+load_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT_CSV = os.path.join(BASE_DIR, "data", "publication_counts.csv")
 
 
-EMAIL = "ngumbikiilu@gmail.com"   
-API_KEY = None                  
- 
+# NCBI asks callers to identify themselves so they can make contact before
+# throttling a misbehaving script. Supply your own address; neither is required
+# for the queries to succeed.
+EMAIL = os.environ.get("NCBI_EMAIL")
+API_KEY = os.environ.get("NCBI_API_KEY")
+
 FMRI_QUERY = (
     '("fMRI"[tiab] OR "functional MRI"[tiab] OR '
     '"functional magnetic resonance imaging"[tiab] OR '
@@ -44,8 +54,9 @@ def get_count(term, year):
         "db": "pubmed",
         "term": f'{term} AND ("{year}"[dp])',
         "retmax": 0,
-        "email": EMAIL,
     }
+    if EMAIL:
+        params["email"] = EMAIL
     if API_KEY:
         params["api_key"] = API_KEY
     resp = requests.get(BASE_URL, params=params, timeout=30)

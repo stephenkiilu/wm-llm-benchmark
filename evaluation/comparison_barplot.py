@@ -20,14 +20,6 @@ from evaluation.plot_style import (
 )
 
 apply_style()
-
-# ── TYPOGRAPHY ───────────────────────────────────────────────────────────────
-# Matched to Plots/figure_AB_final, in Arial rather than the shared stack's
-# Helvetica Neue. What has to match is the type size AFTER both figures are scaled
-# to a column width, i.e. points per canvas inch: that figure runs 20.9 pt ticks on
-# 15.0 in = 1.39 pt/in, and 1.58 x the plot_style ladder on this 12.5 in canvas
-# gives the same 1.39. Copying its 1.9 outright would have printed larger, and on a
-# canvas wide enough to carry it the box turns into a squat band of slab bars.
 FONT_SCALE = 1.58
 FONT_STACK = [f for f in S.FONT_STACK if f != "Helvetica Neue"]
 
@@ -64,37 +56,13 @@ SHORT_NAMES = {
 }
 
 MODELS = ["GPT-4", "GPT-5"]
-
-# Display names, kept separate from the keys above: "GPT-4"/"GPT-5" are what the
-# evaluation pipeline emits and what MODEL_COLORS is keyed on, so renaming those
-# would ripple through every script. Figures and captions show the full model
-# identifiers instead.
 DISPLAY_NAMES = {"GPT-4": "GPT-4o-mini", "GPT-5": "GPT-5-mini"}
-
-# Bar geometry. The two models of a field touch, and the white band between one
-# field's pair and the next is a third of a bar's width - wide enough to group the
-# pairs, narrow enough that the twelve bars still read as one series. GROUP_SPACING
-# (centre-to-centre between fields) follows from those two.
 BAR_WIDTH = 0.36
 GROUP_GAP = BAR_WIDTH / 3
 GROUP_SPACING = 2 * BAR_WIDTH + GROUP_GAP
-
-# Documented exception to the house "square box" rule. Six groups of two bars need
-# width, and a 1:1 box then forces a figure that eats a whole manuscript column in
-# height for no extra information -- the bars just get taller. 0.5 = box height is
-# half its width. Raise toward 1.0 for a squarer figure.
 BOX_ASPECT = 0.55
 FIGSIZE = (12.5, 8.5)
 
-# One colour per extraction variable, for figures where model is encoded by
-# marker shape instead of colour. Okabe-Ito hues, chosen because a 6-way
-# qualitative palette has to survive an all-pairs check (every colour can sit
-# next to every other in a scatter), not just an adjacent-pairs one. Verified
-# with the dataviz palette validator on the light surface, --pairs all:
-#   lightness band PASS · chroma floor PASS · normal-vision worst pair 15.6 PASS
-#   CVD worst pair 7.6 (deutan, magenta/green) -> in the 6-8 band, which is only
-#   legal alongside a second, non-colour cue; every point is therefore also
-#   directly labelled. Same reason the sub-3:1 contrast warning is discharged.
 VARIABLE_COLORS = {
     "Human_vs_non_human_study": "#0072B2",                    # blue
     "Does it use DTI?": "#E69F00",                            # orange
@@ -173,21 +141,15 @@ def _draw(order, piv, lo, hi, sig, ylabel, title, out_png, xlabel, box_aspect,
     ax.title.set_fontsize(FS_TITLE)
     ax.xaxis.label.set_fontsize(FS_LABEL)
     ax.yaxis.label.set_fontsize(FS_LABEL)
-    # Two-line tick labels sit where a one-line axis label would; push it clear.
     ax.xaxis.labelpad = 16
-    # Score axis: 0 -> 1 exactly, ticks at 0 / 0.5 / 1.
     three_ticks(ax, 0.0, 1.0, axis="y")
-    # Bars flush to both spines: no margin before the first or after the last.
     flush_category_axis(ax, -BAR_WIDTH / 2, x[-1] + 1.5 * BAR_WIDTH)
-    ax.set_box_aspect(box_aspect)   # wider than tall; see BOX_ASPECT above
+    ax.set_box_aspect(box_aspect)   
     ax.legend(title="Model", loc="upper right", frameon=False,
               handlelength=1.4, labelspacing=0.35, borderaxespad=0.2)
     ax.grid(axis="y", linestyle="--", alpha=0.3)
 
     if note:
-        # Anchored just under the x-axis label rather than at a guessed fraction:
-        # what sits between them is two lines of tick label whose height moves with
-        # the type scale, so a fixed offset leaves a widening band of white.
         fig.canvas.draw()
         bb = ax.xaxis.label.get_window_extent().transformed(
             ax.transAxes.inverted())

@@ -52,28 +52,17 @@ cp .env.example .env      # then set OPENAI_API_KEY
 Run from the repository root. Metrics first — the figures read their tables.
 
 ```bash
-python -m evaluation.model_comparison      # F1 + accuracy per variable, bootstrap CIs, FDR
-python -m evaluation.lut_ablation          # LUT vs no-LUT: 0.467 -> 0.682
-python -m evaluation.section_ablation      # F1 across the 14 section combinations
-python -m evaluation.task_complexity       # gold-label complexity index
+python -m evaluation.model_comparison      
+python -m evaluation.lut_ablation          
+python -m evaluation.section_ablation     
+python -m evaluation.task_complexity      
 
-python -m evaluation.figure_section_ablation    # needs section_ablation
-python -m evaluation.figure_lut_complexity      # needs lut_ablation + task_complexity
+python -m evaluation.figure_section_ablation    
+python -m evaluation.figure_lut_complexity      
 python -m evaluation.figure_publication_growth
-python -m evaluation.figure_model_f1            # needs model_comparison
-python -m evaluation.figure_model_accuracy      # needs model_comparison
+python -m evaluation.figure_model_f1           
+python -m evaluation.figure_model_accuracy
 ```
-
-| Artifact | Produced by |
-|---|---|
-| `results/tables/model_comparison.csv` | `model_comparison.py` |
-| `results/tables/model_accuracy.csv` | `figure_model_accuracy.py` |
-| `results/tables/lut_ablation.csv` | `lut_ablation.py` |
-| `results/tables/section_ablation.csv` | `section_ablation.py` |
-| `results/tables/task_complexity.csv` | `task_complexity.py` |
-| `results/figures/publication_growth.png` | `figure_publication_growth.py` |
-| `results/figures/section_ablation.png` | `figure_section_ablation.py` |
-| `results/figures/lut_complexity.png` | `figure_lut_complexity.py` |
 
 Bootstrap resampling is seeded (`RANDOM_SEED = 42`, `N_BOOT = 1000`), so these
 commands reproduce the published numbers exactly rather than approximately.
@@ -86,12 +75,7 @@ annotations only — see [data/README.md](data/README.md) for the data dictionar
 
 ## Lookup table
 
-`data/whitematter_lut.csv` holds 313 entries (311 unique): white-matter tract
-names together with their ontology synonyms, Latin variants and abbreviations
-drawn from Uberon and SNOMED CT, plus a `Global` label for analyses treating
-white matter as a single unit. `prompts/with_lut.py` renders the file into the
-system prompt at run time, so the published table is exactly the one the models
-saw.
+To update
 
 ## What is not included
 
@@ -100,18 +84,6 @@ does not limit reproduction: every published number is recomputed from the model
 predictions in `predictions/`, with no API key and no PDFs. Only re-running
 extraction needs the corpus; [data/README.md](data/README.md) explains how to
 rebuild it from the published PMIDs.
-
-## Re-running extraction
-
-```bash
-python -m extraction.extract_with_lut --mode 1 --key 0
-python -m extraction.extract_without_lut --mode 11 --key 3 --concurrency 20 --resume
-./extraction/run_all.sh          # all 14 modes in parallel, one key each
-```
-
-`--mode`: 1 Abstract · 2 Methods · 3 Results · 4 Discussion · 5 Abs+Res ·
-6 Abs+Meth · 7 Abs+Disc · 8 Meth+Res · 9 Meth+Disc · 10 Res+Disc ·
-11 Abs+Meth+Res · 12 Abs+Meth+Disc · 13 Abs+Res+Disc · 14 Meth+Res+Disc
 
 ## Citation
 

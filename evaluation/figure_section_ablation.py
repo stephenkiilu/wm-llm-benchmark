@@ -88,9 +88,6 @@ for i, (ax, field) in enumerate(zip(axes, FIELDS)):
 
     S.panel_letter(ax, PANEL_LETTERS[i])
 
-# Section axis is categorical, so it keeps all 15 labels (the 3-tick rule is for
-# numeric axes). SECTION_ORDER reads bottom-to-top: Abstract at the bottom,
-# Full Text at the top.
 for i, ax in enumerate(axes):
     if i % 3 == 0:                                 # y labels only on left column
         ax.set_yticks(y)

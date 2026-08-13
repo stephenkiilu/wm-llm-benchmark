@@ -1,6 +1,6 @@
 """Extract structured metadata from paper text without the LUT in the prompt.
 
-Asynchronous, with a concurrency limit and --resume support.
+Asynchronous, with a concurrency limit 
 
 Output: predictions/no_lut/
 """

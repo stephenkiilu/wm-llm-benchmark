@@ -18,23 +18,25 @@ answer spaces: `whitematter_tracts`, `study_type`, `DTI_study`, `Human_study`,
 `Dementia_study`, `Disease_study`.
 
 ## `whitematter_lut.csv`
-
-The ontology-guided lookup table: 313 white-matter tract terms derived from
-Uberon and SNOMED CT, in the order the models saw them. `prompts/with_lut.py`
-renders this file into the system prompt, so the published table and the table
-used in the experiments are the same object.
-
-Two entries are case-insensitive duplicates of earlier rows, flagged in the
-`notes` column. They are kept rather than removed because the prompt the models
-received contained them.
-
-Per-term ontology identifiers are **not** included — only the term strings.
+To describe later
 
 ## `publication_counts.csv`
 
 Annual PubMed counts for fMRI and dMRI, used by
 `evaluation/figure_publication_growth.py`. Regenerate with
 `python -m evaluation.publication_counts` (hits the live NCBI API).
+
+NCBI asks callers to identify themselves, and issues optional API keys that
+raise the rate limit from 3 to 10 requests/second. Neither is required — the
+script runs without them. To set them, copy `.env.example` to `.env` and fill
+in:
+
+```
+NCBI_EMAIL=you@example.edu
+NCBI_API_KEY=          # https://account.ncbi.nlm.nih.gov/settings/
+```
+
+`.env` is gitignored. Plain environment variables work too.
 
 ## Not included: article full text
 
