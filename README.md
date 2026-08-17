@@ -80,10 +80,6 @@ each with its SNOMED CT and Uberon identifiers, a short definition, its
 ontology synonyms and Latin variants, and the atlases that list it
 (ICBM-DTI-81, TractSeg, XTRACT, TRACULA, AFQ and others). See [data/README.md](data/README.md) for the column dictionary.
 
-The flat list of tract strings given to the models, which the reported LUT
-ablation used, is inlined in `prompts/with_lut.py` as `_LUT_TERMS` rather than
-loaded from a file, so that module is exactly the prompt they saw.
-
 ## What is not included
 
 Article full text is under publisher copyright and is not redistributed. This

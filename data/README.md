@@ -39,10 +39,6 @@ this table with reference to Uberon, SNOMED CT and the primary literature.
 `Source` spans ICBM-DTI-81, TractSeg, XTRACT, MGH_HCP, TRACULA, AFQ,
 DSI_Studio, JHU_Tractography and and existing white matter tracts literature, so a term can be traced to the atlas it comes from.
 
-The flat list of tract strings actually supplied to the models is inlined in
-`prompts/with_lut.py` as `_LUT_TERMS`, so that module is exactly the prompt they
-saw. This table is the ontology-grounded curation of the same tracts.
-
 ## `publication_counts.csv`
 
 Annual PubMed counts for fMRI and dMRI, used by
