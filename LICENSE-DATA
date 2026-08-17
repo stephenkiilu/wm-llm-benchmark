@@ -6,7 +6,11 @@ International (CC BY 4.0), separately from the MIT licence that covers the
 code in this repository:
 
   data/whitematter_dataset.csv
-  data/whitematter_lut.csv
+  data/Whitematter_Look_up_table.csv
   data/publication_counts.csv
 
 Full text: https://creativecommons.org/licenses/by/4.0/
+
+Whitematter_Look_up_table.csv reuses term labels and synonyms from Uberon
+(CC BY 3.0) and concept identifiers from SNOMED CT. Definitions in that file
+were written for this table and are not verbatim ontology text.

@@ -17,8 +17,31 @@ The paper reports quantitative results for the six variables with bounded
 answer spaces: `whitematter_tracts`, `study_type`, `DTI_study`, `Human_study`,
 `Dementia_study`, `Disease_study`.
 
-## `whitematter_lut.csv`
-To describe later
+## `Whitematter_Look_up_table.csv`
+
+The ontology-guided lookup table: 121 canonical white-matter tracts, one per
+row, each with its ontology identifiers, a definition, and the surface forms
+that should normalize to it.
+
+| Column | Contents |
+|---|---|
+| `preferred_label` | Canonical tract name |
+| `SNOMED_ID` | SNOMED CT concept ID|
+| `UBERON_ID` | Uberon term ID|
+| `Definition` | One-sentence anatomical description of the tract|
+| `synonyms` | Ontology synonyms, Latin variants and abbreviations |
+| `Source` | Atlases and references listing the tract|
+| `Possible related names` | Additional surface forms seen in the literature|
+
+Definitions are one-sentence anatomical descriptions of each tract, written for
+this table with reference to Uberon, SNOMED CT and the primary literature. 
+
+`Source` spans ICBM-DTI-81, TractSeg, XTRACT, MGH_HCP, TRACULA, AFQ,
+DSI_Studio, JHU_Tractography and and existing white matter tracts literature, so a term can be traced to the atlas it comes from.
+
+The flat list of tract strings actually supplied to the models is inlined in
+`prompts/with_lut.py` as `_LUT_TERMS`, so that module is exactly the prompt they
+saw. This table is the ontology-grounded curation of the same tracts.
 
 ## `publication_counts.csv`
 
