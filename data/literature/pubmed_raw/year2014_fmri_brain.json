@@ -1,0 +1,12 @@
+{
+ "term": "(\"fMRI\"[tiab] OR \"functional MRI\"[tiab] OR \"functional magnetic resonance imaging\"[tiab] OR (\"BOLD\"[tiab] AND (\"MRI\"[tiab] OR \"magnetic resonance\"[tiab]))) AND (\"brain\"[tiab] OR \"cerebral\"[tiab] OR \"white matter\"[tiab] OR \"Brain\"[Mesh]) AND \"2014\"[dp]",
+ "response": {
+  "header": {
+   "type": "esearch",
+   "version": "0.3"
+  },
+  "esearchresult": {
+   "count": "4932"
+  }
+ }
+}

@@ -1,9 +1,11 @@
-pandas>=2.0
-numpy>=1.24
-scipy>=1.10
-matplotlib>=3.7
-scikit-learn>=1.3
-statsmodels>=0.14
-openai>=1.0
-python-dotenv>=1.0
-requests>=2.31
+# Python 3.13. Versions used for the paper.
+numpy==2.3.3
+pandas==2.3.2
+scipy==1.16.2
+matplotlib==3.10.6
+pillow==11.3.0
+fonttools==4.60.0
+# only to rerun the extraction (extraction/)
+openai==2.0.0
+python-dotenv==1.1.1
+tiktoken==0.14.0

@@ -1,0 +1,12 @@
+modality,measure,count,query
+fmri,"total, PY=1985-2025",87538,"TS=(""fMRI"" OR ""functional MRI"" OR ""functional magnetic resonance imaging"" OR (""BOLD"" AND (""MRI"" OR ""magnetic resonance""))) AND TS=(""brain"" OR ""cerebral"" OR ""white matter"") AND PY=(1985-2025)"
+dmri,"total, PY=1985-2025",35127,"TS=(""diffusion MRI"" OR ""diffusion tensor imaging"" OR ""diffusion weighted imaging"" OR ""tractography"" OR ((""DTI"" OR ""DWI"") AND (""MRI"" OR ""magnetic resonance""))) AND TS=(""brain"" OR ""cerebral"" OR ""white matter"") AND PY=(1985-2025)"
+fmri,2025,5136,Publication Years facet of the total search
+fmri,2024,4680,Publication Years facet of the total search
+fmri,2023,4478,Publication Years facet of the total search
+fmri,2022,5147,Publication Years facet of the total search
+dmri,2025,2265,Publication Years facet of the total search
+dmri,2024,1966,Publication Years facet of the total search
+dmri,2023,1993,Publication Years facet of the total search
+dmri,2022,2203,Publication Years facet of the total search
+dmri,2021,2390,Publication Years facet of the total search

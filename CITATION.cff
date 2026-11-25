@@ -1,8 +1,9 @@
 cff-version: 1.2.0
-title: "Toward automated meta-analysis of white-matter research: an ontology-guided benchmark for large language models"
+title: "A standardized schema for automated meta-analysis of white-matter tracts literature"
 message: "If you use this benchmark, please cite the paper."
 type: software
 license: MIT
+repository-code: "https://github.com/stephenkiilu/wm-llm-benchmark"
 authors:
   - family-names: Kiilu
     given-names: Stephen

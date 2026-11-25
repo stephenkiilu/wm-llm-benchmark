@@ -1,0 +1,12 @@
+{
+ "term": "(\"diffusion MRI\"[tiab] OR \"diffusion tensor imaging\"[tiab] OR \"diffusion weighted imaging\"[tiab] OR \"tractography\"[tiab] OR ((\"DTI\"[tiab] OR \"DWI\"[tiab]) AND (\"MRI\"[tiab] OR \"magnetic resonance\"[tiab]))) AND (\"white matter\"[tiab] OR \"White Matter\"[Mesh]) AND (\"1985\"[dp] : \"2025\"[dp])",
+ "response": {
+  "header": {
+   "type": "esearch",
+   "version": "0.3"
+  },
+  "esearchresult": {
+   "count": "16737"
+  }
+ }
+}

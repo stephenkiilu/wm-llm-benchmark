@@ -1,98 +1,59 @@
-# Toward automated meta-analysis of white-matter research: an ontology-guided benchmark for large language models
+# wm-llm-benchmark
 
-Code and data for the paper.
+Code and data for *A standardized schema for automated meta-analysis of white-matter tracts literature*
+(Kiilu, Ray, Leigh & Pestilli).
 
-## Abstract
+622 dementia diffusion-MRI articles annotated by hand, a 122-tract vocabulary linked to Uberon and SNOMED CT,
+and the predictions of five OpenAI models (GPT-4o-mini, GPT-5-mini, GPT-5.4-mini, GPT-5.4-nano, GPT-5.6-luna)
+with and without the vocabulary in the prompt.
 
-Understanding white-matter organization is essential for characterizing how the
-brain changes during development, aging and disease. Advances in
-diffusion-weighted magnetic resonance imaging (dMRI) and tractography have
-produced a rapidly expanding literature, making it increasingly difficult to
-synthesize findings systematically. Here, we evaluated the ability of large
-language models (LLMs) to extract structured information from studies of white
-matter, dMRI and tractography. We focused on the literature concerning dementia
-and related disorders, in which white-matter microstructural alterations have
-been extensively investigated. We first constructed a white-matter look-up table
-comprising major anatomical tracts and terminology derived from biomedical
-ontologies, including Uberon and SNOMED CT. We then manually annotated a corpus
-of 622 articles for 13 scientific variables and used this dataset to benchmark
-an information-extraction pipeline based on GPT-4o-mini and GPT-5-mini,
-reporting quantitative results for the six variables with bounded answer spaces.
-Both models performed well on relatively simple extraction tasks (F1 0.81–0.99),
-but performance declined as the complexity of the required information and
-reasoning increased. Incorporating the ontology-based look-up table increased
-GPT-5-mini's F1 on white-matter tract extraction by 21 points, from 0.467 to
-0.682 (a 46% relative increase; p < 0.002). Together, these resources provide a
-benchmark dataset, controlled anatomical vocabulary and computational framework
-for evaluating LLM-based extraction from the white-matter literature. More
-broadly, the study illustrates how reasoning-capable LLMs can be combined with
-curated biomedical vocabularies to support scalable and reproducible literature
-synthesis.
-
-**Keywords:** white matter tracts, large language models, information
-extraction, neuroimaging, meta-analysis
-
-## Setup
+## Reproduce the paper
 
 ```bash
-git clone https://github.com/stephenkiilu/wm-llm-benchmark.git
-cd wm-llm-benchmark
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+python -m venv .venv && .venv/bin/pip install -r requirements.txt
+PY=.venv/bin/python ./reproduce.sh
 ```
 
-An API key is needed only to re-run extraction. For evaluation, skip it.
+This rebuilds every table and figure from the saved predictions in about a minute. It needs no API key and makes no network calls.
 
-```bash
-cp .env.example .env      # then set OPENAI_API_KEY
+| Paper | Script | Output |
+|---|---|---|
+| Figure 1 | `figures/figure1.py` | `results/figures/figure1.*` |
+| Table 1 | `analysis/field_metrics.py` | `results/tables/field_metrics.csv` |
+| Figure 2a, vocabulary effect | `analysis/evaluate.py` | `tract_results.csv`, `vocabulary_effect.csv` |
+| Figure 2b, cost and tokens | `analysis/efficiency.py` | `efficiency.csv` |
+| Figure 2c, Tables S2–S3 | `analysis/sections.py` | `section_f1.csv`, `table_s2_sections.csv`, `table_s3_abstract_vs_full.csv` |
+| Figure S1, task complexity | `analysis/complexity.py`, `figures/figure_s1_complexity.py` | `task_complexity.csv` |
+| Figure S2, pipeline | `figures/figure_s2_pipeline.py` | `results/figures/figure_s2_pipeline.*` |
+| Error audit sample | `analysis/error_sample.py` | `error_samples/` (adjudicated counts: `data/error_audit.csv`) |
+| Vocabulary compliance | `analysis/vocab_compliance.py` | `vocabulary_compliance.csv` |
+| Table S1, search queries | `data/literature/` | see its README |
+
+## Layout
+
+```
+data/         annotations.csv (reference labels), vocabulary.csv (122 tracts), error_audit.csv,
+              literature/ (PubMed and Web of Science counts), brain_renders/ (Figure 1d)
+prompts/      build_prompt.py and the two rendered prompts (with / without the vocabulary)
+extraction/   run_extraction.py, run_all.sh: the API runs (need a key and the full texts)
+predictions/  full_text/ 10 runs, sections/ 14 GPT-5.6-luna section-input runs, usage/ per-call logs
+analysis/     scoring (metrics.py, vocabulary.py) and one script per table
+figures/      one script per figure; style.py and page.py hold the shared style
+results/      tables/ and figures/, as committed
 ```
 
-## Reproducing the paper
+Runs are named `<model>__<with|without>_vocabulary[__<sections>].csv`, one row per article (`PMID`).
+WM tracts are scored as micro-F1 on vocabulary ids over articles whose reference lists at least one tract;
+95% CIs are percentile bootstrap over articles (10,000 resamples); vocabulary effects are paired
+bootstraps with Benjamini–Hochberg q-values.
 
-Run from the repository root. Metrics first — the figures read their tables.
+## Rerunning the extraction
 
-```bash
-python -m evaluation.model_comparison      
-python -m evaluation.lut_ablation          
-python -m evaluation.section_ablation     
-python -m evaluation.task_complexity      
+The article full texts are not redistributed. Retrieve them by PMID (`data/annotations.csv`), parse them to
+`data/full_text/articles.json`, copy `.env.example` to `.env` with your `OPENAI_API_KEY`, then
+`extraction/run_all.sh` (about US$28 for all 6,220 calls; `run_extraction.py --dry-run` estimates the cost first).
+Model outputs can differ slightly between runs, and GPT-5.6-luna has no dated snapshot.
 
-python -m evaluation.figure_section_ablation    
-python -m evaluation.figure_lut_complexity      
-python -m evaluation.figure_publication_growth
-python -m evaluation.figure_model_f1           
-python -m evaluation.figure_model_accuracy
-```
+## Licence
 
-Bootstrap resampling is seeded (`RANDOM_SEED = 42`, `N_BOOT = 1000`), so these
-commands reproduce the published numbers exactly rather than approximately.
-
-## Benchmark dataset
-
-622 manually annotated articles, 13 scientific variables, of which the paper
-reports the six with bounded answer spaces. Bibliographic metadata and
-annotations only — see [data/README.md](data/README.md) for the data dictionary.
-
-## Lookup table
-
-`data/Whitematter_Look_up_table.csv` holds 121 canonical white-matter tracts,
-each with its SNOMED CT and Uberon identifiers, a short definition, its
-ontology synonyms and Latin variants, and the atlases that list it
-(ICBM-DTI-81, TractSeg, XTRACT, TRACULA, AFQ and others). See [data/README.md](data/README.md) for the column dictionary.
-
-## What is not included
-
-Article full text is under publisher copyright and is not redistributed. This
-does not limit reproduction: every published number is recomputed from the model
-predictions in `predictions/`, with no API key and no PDFs. Only re-running
-extraction needs the corpus; [data/README.md](data/README.md) explains how to
-rebuild it from the published PMIDs.
-
-## Citation
-
-See [CITATION.cff](CITATION.cff).
-
-## License
-
-MIT for code, see [LICENSE](LICENSE). The files in `data/` are CC BY 4.0,
-see [LICENSE-DATA](LICENSE-DATA).
+Code: MIT (`LICENSE`). Data, predictions and results: CC BY 4.0 (`LICENSE-DATA`). Please cite the paper (`CITATION.cff`).

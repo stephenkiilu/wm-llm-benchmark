@@ -1,8 +1,20 @@
-__pycache__/
-*.py[cod]
+# secrets
+.env
+/openai
+*.key
+
+# environments and caches
 .venv/
 venv/
-.env
-*.log
-.DS_Store
+__pycache__/
+*.py[cod]
 .ipynb_checkpoints/
+.DS_Store
+.vscode/
+.idea/
+.superpowers/
+
+# local only
+app-freesurfer/
+*.dmg
+*.log

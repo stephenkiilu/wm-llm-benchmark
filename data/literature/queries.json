@@ -1,0 +1,27 @@
+{
+ "retrieved_utc": "2026-10-28T16:12:10+00:00",
+ "database": "PubMed (NCBI E-utilities esearch)",
+ "date_field": "[dp] publication date; totals use one range search, annual counts one search per year",
+ "years": [
+  1985,
+  2025
+ ],
+ "queries": {
+  "fmri": "(\"fMRI\"[tiab] OR \"functional MRI\"[tiab] OR \"functional magnetic resonance imaging\"[tiab] OR (\"BOLD\"[tiab] AND (\"MRI\"[tiab] OR \"magnetic resonance\"[tiab])))",
+  "dmri": "(\"diffusion MRI\"[tiab] OR \"diffusion tensor imaging\"[tiab] OR \"diffusion weighted imaging\"[tiab] OR \"tractography\"[tiab] OR ((\"DTI\"[tiab] OR \"DWI\"[tiab]) AND (\"MRI\"[tiab] OR \"magnetic resonance\"[tiab])))",
+  "brain_filter": "(\"brain\"[tiab] OR \"cerebral\"[tiab] OR \"white matter\"[tiab] OR \"Brain\"[Mesh])",
+  "humans_filter": "\"Humans\"[Mesh]",
+  "white_matter_filter": "(\"white matter\"[tiab] OR \"White Matter\"[Mesh])",
+  "fmri_original": "(\"fMRI\"[tiab] OR \"functional MRI\"[tiab] OR \"functional magnetic resonance imaging\"[tiab] OR (\"BOLD\"[tiab] AND (\"MRI\"[tiab] OR \"magnetic resonance\"[tiab] OR \"Magnetic Resonance Imaging\"[Mesh])))",
+  "dmri_original": "(\"diffusion MRI\"[tiab] OR \"diffusion tensor imaging\"[tiab] OR \"diffusion weighted imaging\"[tiab] OR \"tractography\"[tiab] OR \"Diffusion Magnetic Resonance Imaging\"[Mesh] OR \"Diffusion Tensor Imaging\"[Mesh] OR ((\"DTI\"[tiab] OR \"DWI\"[tiab]) AND (\"MRI\"[tiab] OR \"magnetic resonance\"[tiab] OR \"Magnetic Resonance Imaging\"[Mesh])))"
+ },
+ "totals_unique": {
+  "fmri_brain": 81372,
+  "dmri_brain": 32404,
+  "fmri_brain_humans": 66658,
+  "dmri_brain_humans": 24996,
+  "dmri_white_matter": 16737,
+  "fmri_original_query": 91420,
+  "dmri_original_query": 61587
+ }
+}

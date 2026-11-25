@@ -1,0 +1,7 @@
+﻿Field,Abstract F1,Full text F1,ΔF1 (Full text − A),Paired 95% CI for ΔF1
+Article type,0.967,0.977,+0.011,"[0.004, 0.018]"
+Study population,0.981,0.998,+0.017,"[0.010, 0.025]"
+Use of DTI,0.971,0.994,+0.023,"[0.014, 0.032]"
+Dementia focus,0.803,0.807,+0.004,"[-0.018, 0.025]"
+Disorders studied,0.619,0.608,-0.011,"[-0.029, 0.008]"
+WM tracts studied,0.418,0.670,+0.252,"[0.209, 0.295]"

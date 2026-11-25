@@ -2,15 +2,18 @@ Data licence
 ============
 
 The following files are licensed under Creative Commons Attribution 4.0
-International (CC BY 4.0), separately from the MIT licence that covers the
-code in this repository:
+International (CC BY 4.0), separately from the MIT licence that covers the code:
 
-  data/whitematter_dataset.csv
-  data/Whitematter_Look_up_table.csv
-  data/publication_counts.csv
+  data/annotations.csv
+  data/vocabulary.csv
+  data/error_audit.csv
+  data/literature/*.csv
+  predictions/
+  results/
 
 Full text: https://creativecommons.org/licenses/by/4.0/
 
-Whitematter_Look_up_table.csv reuses term labels and synonyms from Uberon
-(CC BY 3.0) and concept identifiers from SNOMED CT. Definitions in that file
-were written for this table and are not verbatim ontology text.
+vocabulary.csv reuses term labels and synonyms from Uberon (CC BY 3.0) and
+concept identifiers from SNOMED CT. Its definitions were written for this table
+and are not verbatim ontology text. Bibliographic metadata in annotations.csv
+comes from PubMed. Article full texts are not redistributed.
