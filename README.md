@@ -7,6 +7,20 @@ Code and data for *A standardized schema for automated meta-analysis of white-ma
 and the predictions of five OpenAI models (GPT-4o-mini, GPT-5-mini, GPT-5.4-mini, GPT-5.4-nano, GPT-5.6-luna)
 with and without the vocabulary in the prompt.
 
+## Abstract
+
+Coordinated communication between cortical regions relies on white matter (WM) structural connectivity, which
+makes up half of human brain volume and is vital for understanding development, aging, and disease. Advances in
+diffusion MRI (dMRI) and tractography allow in vivo mapping of major WM tracts across individuals. However, rapid
+literature growth and a lack of standardized reporting hinder automated information extraction. To address this,
+we developed a schema-based, LLM-driven WM extraction framework featuring a harmonized tract vocabulary derived
+from atlases, pipelines (e.g., TractSeg), and biomedical ontologies (Uberon, SNOMED CT). Evaluated on a manually
+annotated dataset of PubMed articles on dementia, our framework significantly improved tract extraction F₁ scores
+by up to 18% across four of five LLMs (all q < 0.001). This demonstrates that vocabulary-guided LLM extraction
+can scale WM research synthesis, advancing large-scale meta-analysis.
+
+**Keywords:** white matter tracts, large language models, information extraction, neuroimaging, meta-analysis
+
 ## Reproduce the paper
 
 ```bash
