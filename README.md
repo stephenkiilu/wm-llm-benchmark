@@ -19,7 +19,8 @@ This rebuilds every table and figure from the saved predictions in about a minut
 | Paper | Script | Output |
 |---|---|---|
 | Figure 1 | `figures/figure1.py` | `results/figures/figure1.*` |
-| Table 1 | `analysis/field_metrics.py` | `results/tables/field_metrics.csv` |
+| Table 1 (both arms; see the `arm` column) | `analysis/field_metrics.py` | `results/tables/field_metrics.csv` |
+| Figure 2 | `figures/figure2.py` | `results/figures/figure2.*` |
 | Figure 2a, vocabulary effect | `analysis/evaluate.py` | `tract_results.csv`, `vocabulary_effect.csv` |
 | Figure 2b, cost and tokens | `analysis/efficiency.py` | `efficiency.csv` |
 | Figure 2c, Tables S2–S3 | `analysis/sections.py` | `section_f1.csv`, `table_s2_sections.csv`, `table_s3_abstract_vs_full.csv` |
@@ -27,6 +28,7 @@ This rebuilds every table and figure from the saved predictions in about a minut
 | Figure S2, pipeline | `figures/figure_s2_pipeline.py` | `results/figures/figure_s2_pipeline.*` |
 | Error audit sample | `analysis/error_sample.py` | `error_samples/` (adjudicated counts: `data/error_audit.csv`) |
 | Vocabulary compliance | `analysis/vocab_compliance.py` | `vocabulary_compliance.csv` |
+| Tract name variants | `analysis/name_variants.py` (needs the full texts; skipped without them) | `name_variants.csv` |
 | Table S1, search queries | `data/literature/` | see its README |
 
 ## Layout
@@ -51,7 +53,9 @@ bootstraps with Benjamini–Hochberg q-values.
 
 The article full texts are not redistributed. Retrieve them by PMID (`data/annotations.csv`), parse them to
 `data/full_text/articles.json`, copy `.env.example` to `.env` with your `OPENAI_API_KEY`, then
-`extraction/run_all.sh` (about US$28 for all 6,220 calls; `run_extraction.py --dry-run` estimates the cost first).
+`extraction/run_all.sh` (all 6,220 full-text calls cost US$34; `run_extraction.py --dry-run` estimates the cost first).
+`articles.json` is a list of `{"pmid", "metadata": {"title", "abstract"}, "content": {section: text}}`; the section runs
+are `run_extraction.py --model gpt-5.6-luna --arm with_vocabulary --effort medium --sections all14`.
 Model outputs can differ slightly between runs, and GPT-5.6-luna has no dated snapshot.
 
 ## Licence

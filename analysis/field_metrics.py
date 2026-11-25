@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 
 import metrics as M
-from paths import ANNOTATIONS, ARMS, MODELS, TABLES, WITH, run_file
+from paths import ANNOTATIONS, ARMS, MODELS, TABLES, run_file
 from vocabulary import load_vocabulary
 
 # (manuscript name, kind, reference column, prediction column, canonical map)
@@ -69,6 +69,7 @@ if __name__ == "__main__":
     res = run()
     TABLES.mkdir(parents=True, exist_ok=True)
     res.to_csv(TABLES / "field_metrics.csv", index=False)
-    show = res[res.arm == WITH].pivot(index="field", columns="model", values="f1")
-    print(show.loc[[f[0] for f in FIELDS], MODELS].round(3).to_string())
+    for arm in ARMS:
+        show = res[res.arm == arm].pivot(index="field", columns="model", values="f1")
+        print(f"\nF1, {arm}\n" + show.loc[[f[0] for f in FIELDS], MODELS].round(3).to_string())
     print(f"wrote {TABLES / 'field_metrics.csv'}")

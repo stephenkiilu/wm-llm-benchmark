@@ -29,5 +29,6 @@ if __name__ == "__main__":
                          "pct_synonym": 100 * synonym / len(terms),
                          "pct_unusable": 100 * unusable / len(terms)})
     out = pd.DataFrame(rows)
+    TABLES.mkdir(parents=True, exist_ok=True)
     out.to_csv(TABLES / "vocabulary_compliance.csv", index=False)
     print(out.round(1).to_string(index=False))

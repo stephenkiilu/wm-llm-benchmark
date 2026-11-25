@@ -21,5 +21,6 @@ if __name__ == "__main__":
         "cost": r.usage_cost_usd,                       # US$ for all 622 articles
         "trunc": r.usage_truncated,
     })
+    TABLES.mkdir(parents=True, exist_ok=True)
     out.to_csv(TABLES / "efficiency.csv", index=False)
     print(out[["model", "arm", "f1", "out", "cost"]].round(3).to_string(index=False))

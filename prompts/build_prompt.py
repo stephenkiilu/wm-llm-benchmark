@@ -11,19 +11,19 @@ from pathlib import Path
 
 import pandas as pd
 
-# ── LUT ───────────────────────────────────────────────────────────────────────
+# ── VOCABULARY ──────────────────────────────────────────────────────────────────
 HERE = Path(__file__).resolve().parent
-LUT_PATH = HERE.parent / "data" / "vocabulary.csv"
+VOCAB_PATH = HERE.parent / "data" / "vocabulary.csv"
 
 
 # Strings that are absent values, not tract names. `str(nan)` is "nan", which is
-# truthy - so a blank LUT row will silently enter the prompt as a tract called
+# truthy - so a blank vocabulary row will silently enter the prompt as a tract called
 # "nan" unless it is filtered explicitly.
 _NOT_A_LABEL = {"", "nan", "none", "null", "na", "n/a", "-"}
 
 
-def load_vocabulary(path=LUT_PATH) -> list:
-    """Canonical tract labels, sorted, from the LUT. Blank rows are dropped."""
+def load_vocabulary(path=VOCAB_PATH) -> list:
+    """Canonical tract labels, sorted, from the vocabulary. Blank rows are dropped."""
     table = pd.read_csv(path)
     labels, dropped = set(), 0
     for value in table["preferred_label"]:
@@ -38,7 +38,7 @@ def load_vocabulary(path=LUT_PATH) -> list:
     if not labels:
         raise ValueError(f"no usable preferred_label values in {path}")
     if dropped:
-        print(f"[build_prompt] warning: dropped {dropped} blank LUT row(s) "
+        print(f"[build_prompt] warning: dropped {dropped} blank vocabulary row(s) "
               f"from the prompt vocabulary", file=sys.stderr)
     return sorted(labels)
 
@@ -50,7 +50,7 @@ _VOCAB_BLOCK = "[" + ", ".join(f'"{t}"' for t in VOCABULARY) + "]"
 # ── TRACT FIELD GUIDANCE ──────────────────────────────────────────────────────
 # The ONLY text that differs between the two arms.
 
-_TRACTS_NOLUT = """- whitematter_tracts:
+_TRACTS_WITHOUT = """- whitematter_tracts:
   - CRITICAL PRE-FILTER: If the study is an ANIMAL STUDY (e.g., mice, rats, monkeys)
     or a REVIEW/META-ANALYSIS, you MUST return []. Do NOT extract tracts for
     non-human subjects or systematic reviews or meta-analyses.
@@ -65,7 +65,7 @@ _TRACTS_NOLUT = """- whitematter_tracts:
   - EXCLUSION: Do NOT include gray matter structures (e.g., Putamen, Thalamus,
     Hippocampus, Amygdala, Cortex, Basal Ganglia) or generic regions."""
 
-_TRACTS_LUT = """- whitematter_tracts:
+_TRACTS_WITH = """- whitematter_tracts:
   - CRITICAL PRE-FILTER: If the study is an ANIMAL STUDY (e.g., mice, rats, monkeys)
     or a REVIEW/META-ANALYSIS, you MUST return []. Do NOT extract tracts for
     non-human subjects or systematic reviews or meta-analyses.
@@ -161,10 +161,10 @@ Example Output
 }}
 """
 
-SYSTEM_PROMPT_NOLUT15 = _TEMPLATE.format(tracts=_TRACTS_NOLUT)
-SYSTEM_PROMPT_LUT15 = _TEMPLATE.format(tracts=_TRACTS_LUT)
+PROMPT_WITHOUT = _TEMPLATE.format(tracts=_TRACTS_WITHOUT)
+PROMPT_WITH = _TEMPLATE.format(tracts=_TRACTS_WITH)
 
-PROMPTS = {"without_vocabulary": SYSTEM_PROMPT_NOLUT15, "with_vocabulary": SYSTEM_PROMPT_LUT15}
+PROMPTS = {"without_vocabulary": PROMPT_WITHOUT, "with_vocabulary": PROMPT_WITH}
 
 EXTRACTION_FIELDS = [
     "imaging_modalities", "patient_groups", "whitematter_tracts", "subjects",
@@ -177,7 +177,7 @@ EXTRACTION_FIELDS = [
 if __name__ == "__main__":
     import difflib
 
-    print(f"vocabulary: {len(VOCABULARY)} canonical labels from {LUT_PATH.name}")
+    print(f"vocabulary: {len(VOCABULARY)} canonical labels from {VOCAB_PATH.name}")
     try:                                        # token counts are optional
         import tiktoken
         enc = tiktoken.get_encoding("o200k_base")
@@ -188,17 +188,17 @@ if __name__ == "__main__":
 
     # the two arms must differ ONLY inside the whitematter_tracts guidance
     diff = [l for l in difflib.unified_diff(
-        SYSTEM_PROMPT_NOLUT15.splitlines(), SYSTEM_PROMPT_LUT15.splitlines(), lineterm="", n=0)
+        PROMPT_WITHOUT.splitlines(), PROMPT_WITH.splitlines(), lineterm="", n=0)
         if l and l[0] in "+-" and not l.startswith(("---", "+++"))]
     print(f"\ndiffering lines: {len(diff)}")
     for l in diff:
         print(f"   {l[:100]}")
 
-    assert SYSTEM_PROMPT_LUT15.count("Output Schema") == 1
+    assert PROMPT_WITH.count("Output Schema") == 1
     for f in EXTRACTION_FIELDS:
-        assert f in SYSTEM_PROMPT_NOLUT15 and f in SYSTEM_PROMPT_LUT15, f
-    assert "controlled vocabulary" in SYSTEM_PROMPT_LUT15
-    assert "controlled vocabulary" not in _TRACTS_NOLUT
+        assert f in PROMPT_WITHOUT and f in PROMPT_WITH, f
+    assert "controlled vocabulary" in PROMPT_WITH
+    assert "controlled vocabulary" not in _TRACTS_WITHOUT
     for junk in ("nan", "none", "null"):
         assert f'"{junk}"' not in _VOCAB_BLOCK, f"{junk!r} leaked into the vocabulary"
     for name, text in PROMPTS.items():

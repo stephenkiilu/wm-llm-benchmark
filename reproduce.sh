@@ -1,6 +1,6 @@
 #!/bin/bash
 # Rebuild every table and figure in the paper from the saved predictions.
-# No API calls; about 2 minutes.   Usage: ./reproduce.sh   (PY=python3 ./reproduce.sh)
+# No API calls; about a minute.   Usage: ./reproduce.sh   (PY=python3 ./reproduce.sh)
 set -euo pipefail
 cd "$(dirname "$0")"
 PY="${PY:-python}"

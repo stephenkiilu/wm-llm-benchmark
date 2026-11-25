@@ -1,5 +1,5 @@
 #!/bin/bash
-# All full-text runs: 5 models x 2 arms x 622 articles = 6,220 calls (~US$28).
+# All full-text runs: 5 models x 2 arms x 622 articles = 6,220 calls (US$34 logged).
 # Each arm is retried up to MAX_PASSES times with --resume, so an interruption
 # loses only the calls in flight; rerun the same command to continue.
 #
@@ -46,7 +46,7 @@ for model in "${MODELS[@]}"; do
             echo " $label | effort=$EFFORT | seed=$SEED | conc=$conc | pass $pass/$MAX_PASSES"
             echo " $(date '+%F %T')"
             echo "=================================================================="
-            $PY extraction/run_extraction.py \
+            "$PY" extraction/run_extraction.py \
                 --model "$model" --arm "$arm" --effort "$EFFORT" \
                 --concurrency "$conc" --seed "$SEED" --resume \
                 ${LIMIT:+--limit $LIMIT}

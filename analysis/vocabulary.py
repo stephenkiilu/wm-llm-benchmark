@@ -11,7 +11,7 @@ Parent and child tracts are different entries: "cingulum" does not match
 
     vocab = load_vocabulary()
     vocab.resolve("Corpus Callosum of Splenium")   # -> ('LUT:0040', 'folded')
-    vocab.resolve_cell("Fornix;Cingulum")          # -> {'LUT:0031', 'LUT:0002'}
+    vocab.resolve_cell("Fornix;Cingulum")          # -> {'LUT:0043', 'LUT:0002'}
 """
 
 import collections

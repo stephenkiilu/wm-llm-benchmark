@@ -1,6 +1,6 @@
 """Supplementary Fig. S1: extraction F1 against task complexity, one panel per model.
 
-Full-text runs without the vocabulary in the prompt (the Table 1 condition);
+Full-text runs without the vocabulary in the prompt;
 WM tracts are scored on vocabulary ids as everywhere else. Colour is the field,
 the panel is the model. x is log (complexity spans 0.0005-1), y is linear and
 starts at 0.5. Prints Spearman rho per model with exact permutation p (n = 6).
