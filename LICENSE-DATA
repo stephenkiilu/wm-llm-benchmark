@@ -6,7 +6,6 @@ International (CC BY 4.0), separately from the MIT licence that covers the code:
 
   data/annotations.csv
   data/vocabulary.csv
-  data/error_audit.csv
   data/literature/*.csv
   predictions/
   results/

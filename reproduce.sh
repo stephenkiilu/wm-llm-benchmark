@@ -5,7 +5,7 @@ set -euo pipefail
 cd "$(dirname "$0")"
 PY="${PY:-python}"
 
-for step in evaluate field_metrics sections complexity efficiency vocab_compliance error_sample; do
+for step in evaluate field_metrics sections complexity efficiency vocab_compliance; do
     echo "== analysis/$step.py"
     "$PY" "analysis/$step.py" > /dev/null
 done

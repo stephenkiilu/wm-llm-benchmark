@@ -13,8 +13,6 @@ cells are comma-separated.
 when scoring), `Source` (atlases, pipelines and papers listing the tract), `Possible related names`
 (curation notes, not used).
 
-**`error_audit.csv`**: hand-adjudicated categories for 50 sampled disagreements per model.
-
 **`literature/`**: PubMed and Web of Science counts behind Figure 1a–c and Table S1 (see its README).
 
 **`brain_renders/`**: TractSeg renders of SLF I–III and the arcuate fasciculus (Figure 1d), one HCP subject

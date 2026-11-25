@@ -1,6 +1,0 @@
-model,reference_under_reporting,extraction_omission,global_label_mismatch,instruction_violation,unsupported_extraction,section_attribution_error,anatomical_scope_violation,n_audited
-gpt-4o-mini,9,25,6,2,2,3,3,50
-gpt-5-mini,35,12,2,0,1,0,0,50
-gpt-5.4-mini,33,17,0,0,0,0,0,50
-gpt-5.4-nano,41,9,0,0,0,0,0,50
-gpt-5.6-luna,38,12,0,0,0,0,0,50

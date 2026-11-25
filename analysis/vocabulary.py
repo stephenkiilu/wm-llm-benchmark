@@ -88,7 +88,6 @@ class LutIndex:
         self.use_related = use_related
         self.form_to_id: Dict[str, str] = {}                    # tier 1
         self.fold_to_id: Dict[FrozenSet[str], str] = {}         # tier 2
-        self.id_to_label: Dict[str, str] = {}
         self.collisions: Dict[str, Set[str]] = collections.defaultdict(set)
         self.fold_collisions: Dict[FrozenSet[str], Set[str]] = collections.defaultdict(set)
         self.unmapped: collections.Counter = collections.Counter()
@@ -106,7 +105,6 @@ class LutIndex:
     def _build(self) -> None:
         for i, row in self.table.iterrows():
             tract_id = f"LUT:{i:04d}"
-            self.id_to_label[tract_id] = str(row["preferred_label"]).strip()
             for form in self._surface_forms(row):
                 key = normalise(form)
                 if not key:
@@ -150,11 +148,6 @@ class LutIndex:
             if tract_id:
                 ids.add(tract_id)
         return ids
-
-    def label(self, tract_id: str) -> str:
-        if tract_id.startswith("RAW:"):
-            return tract_id[4:] + "  [unmapped]"
-        return self.id_to_label.get(tract_id, tract_id)
 
     # -- diagnostics --
     def coverage(self, cells) -> Dict[str, int]:

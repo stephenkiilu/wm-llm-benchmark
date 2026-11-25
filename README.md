@@ -26,7 +26,6 @@ This rebuilds every table and figure from the saved predictions in about a minut
 | Figure 2c, Tables S2–S3 | `analysis/sections.py` | `section_f1.csv`, `table_s2_sections.csv`, `table_s3_abstract_vs_full.csv` |
 | Figure S1, task complexity | `analysis/complexity.py`, `figures/figure_s1_complexity.py` | `task_complexity.csv` |
 | Figure S2, pipeline | `figures/figure_s2_pipeline.py` | `results/figures/figure_s2_pipeline.*` |
-| Error audit sample | `analysis/error_sample.py` | `error_samples/` (adjudicated counts: `data/error_audit.csv`) |
 | Vocabulary compliance | `analysis/vocab_compliance.py` | `vocabulary_compliance.csv` |
 | Tract name variants | `analysis/name_variants.py` (needs the full texts; skipped without them) | `name_variants.csv` |
 | Table S1, search queries | `data/literature/` | see its README |
@@ -34,7 +33,7 @@ This rebuilds every table and figure from the saved predictions in about a minut
 ## Layout
 
 ```
-data/         annotations.csv (reference labels), vocabulary.csv (122 tracts), error_audit.csv,
+data/         annotations.csv (reference labels), vocabulary.csv (122 tracts),
               literature/ (PubMed and Web of Science counts), brain_renders/ (Figure 1d)
 prompts/      build_prompt.py and the two rendered prompts (with / without the vocabulary)
 extraction/   run_extraction.py, run_all.sh: the API runs (need a key and the full texts)
