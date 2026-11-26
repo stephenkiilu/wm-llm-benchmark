@@ -78,13 +78,10 @@ NCOL, NROW = 3, 2
 # Small panels on a modest canvas is exactly the case where type has to be
 # scaled UP: printed size is points per canvas inch, and each panel here is only
 # ~2.9 in wide.
-# The figure title keeps FONT_SCALE; everything else - panel titles, ticks, axis
-# names, legend - takes BODY_SCALE, 10% larger. Deliberately NOT one multiplier:
-# the title is already sized to fit the canvas width on one line, and scaling it
-# with the rest would push it past the edge.
+# Panel titles, ticks, axis names and legend take BODY_SCALE. No figure title:
+# the caption carries it.
 FONT_SCALE = 1.55
 BODY_SCALE = FONT_SCALE * 1.10
-FS_TITLE = S.FS_TITLE * FONT_SCALE
 FS_PANEL_TITLE = S.FS_PANEL_TITLE * BODY_SCALE
 FS_LABEL = S.FS_LABEL * BODY_SCALE
 FS_TICK = S.FS_TICK * BODY_SCALE
@@ -159,8 +156,6 @@ key_ax.legend(handles=[Line2D([0], [0], color="none", marker="o",
               loc="center", frameon=False, handletextpad=0.6,
               labelspacing=0.85, fontsize=FS_LEGEND)
 
-fig.suptitle("Extraction F$_1$ generally declines with increasing task complexity",
-             fontsize=FS_TITLE, fontweight="bold")
 # Figure-level axis labels: every panel shares one scale, so labelling each of
 # them six times would spend space repeating the same two strings.
 # One label per axis for the whole figure: all five panels share both scales.
