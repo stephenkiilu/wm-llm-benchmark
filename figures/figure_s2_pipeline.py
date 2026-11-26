@@ -1,7 +1,10 @@
 """Supplementary Fig. S2: the pipeline, from PubMed retrieval to structured output.
 
-Three rows: literature retrieval; LLM extraction from article text, schema and
-tract vocabulary; one JSON record per article. Geometry is in tenths of an inch.
+Three rows: literature retrieval and GROBID parsing; LLM extraction from the
+parsed text, schema and tract vocabulary; one JSON record per article. Field
+names and values in the record are the GPT-5.6-luna output for PMID 16005548
+(with the vocabulary). Geometry is in tenths of an inch. No in-figure title:
+the caption carries it.
 
 Output: results/figures/figure_s2_pipeline.png, .svg
 """
@@ -43,7 +46,6 @@ ARROW = "#8B9AA7"
 # canvas below is only as large as the text needs - 14.8 in at this scale.
 # ---------------------------------------------------------------------------
 FONT_SCALE = 1.35
-FS_TITLE = 17 * FONT_SCALE
 FS_STAGE_NUM = 21 * FONT_SCALE    # the 1 / 2 / 3 in the chips
 FS_STAGE = 15 * FONT_SCALE        # stage name in the chip
 FS_EYEBROW = 13 * FONT_SCALE      # INPUT 1 - ARTICLE TEXT
@@ -51,7 +53,7 @@ FS_CARD = 14 * FONT_SCALE         # card headers
 FS_BODY = 12.5 * FONT_SCALE       # labels inside cards
 FS_MOCK = 10.5 * FONT_SCALE       # mock article text and JSON
 
-W, H = 148.0, 109.0      # canvas in tenths of an inch
+W, H = 148.0, 104.5      # canvas in tenths of an inch
 fig = plt.figure(figsize=(W / 10, H / 10))
 ax = fig.add_axes([0, 0, 1, 1])
 ax.set_xlim(0, W)
@@ -162,7 +164,7 @@ for y, h, num, lines in ((R1_Y, R1_H, "1", ["Literature", "retrieval"]),
     stage(CHIP_X, y + CHIP_PAD, CHIP_W, h - 2 * CHIP_PAD, num, lines)
 
 # ---------------------------------------------------------------------------
-# Stage 1: query -> corpus -> full-text recovery -> structured text
+# Stage 1: query -> corpus (PDF) -> GROBID parsing -> text by section
 # ---------------------------------------------------------------------------
 CARD_H1 = 14.5
 r1_bot = R1_Y + (R1_H - CARD_H1) / 2
@@ -185,21 +187,19 @@ for i, dx in enumerate((2.4, 1.2, 0.0)):
     box(cx + 2.6 + dx, top - 7.6 - dx * 0.5, 5.4, 7.2, fc=CARD_BG,
         ec=INK_SOFT, lw=0.9, r=0.5, z=4 + i)
 label(cx + 12.4, top - 2.8, "n = 622", size=FS_BODY, weight="bold")
-label(cx + 12.4, top - 6.2, "research articles", size=FS_MOCK, color=INK_SOFT)
+label(cx + 12.4, top - 6.2, "articles (PDF)", size=FS_MOCK, color=INK_SOFT)
 
-# Full-text recovery.
-top = card_header(tx, r1_bot, 27.0, CARD_H1, "Full-text recovery", CHIP)
-for i, (nm, note, col) in enumerate([("Pubget", "open access", TECH),
-                                     ("Grobid", "paywalled", BIBLIO)]):
-    yy = top - 2.9 - i * 4.0
-    ax.add_patch(Circle((tx + 3.4, yy), 1.4, facecolor=col, edgecolor="none",
-                        zorder=5))
-    label(tx + 6.2, yy, nm, size=FS_MOCK)
-    label(tx + 15.0, yy, note, size=FS_MOCK, color=INK_SOFT)
+# PDF parsing: every article goes through GROBID.
+top = card_header(tx, r1_bot, 27.0, CARD_H1, "PDF parsing", CHIP)
+label(tx + 13.5, top - 2.6, "GROBID", size=FS_BODY, weight="bold", ha="center")
+label(tx + 13.5, top - 5.4, "PDF to TEI XML", size=FS_MOCK, color=INK_SOFT,
+      ha="center")
+label(tx + 13.5, top - 8.0, "all 622 articles", size=FS_MOCK, color=INK_SOFT,
+      ha="center")
 
 # Structured text.
-top = card_header(sx, r1_bot, 24.0, CARD_H1, "Structured text", CHIP)
-label(sx + 12.0, top - 2.6, "JSON / XML", size=FS_BODY, weight="bold",
+top = card_header(sx, r1_bot, 24.0, CARD_H1, "Text by section", CHIP)
+label(sx + 12.0, top - 2.6, "JSON", size=FS_BODY, weight="bold",
       ha="center")
 label(sx + 12.0, top - 5.4, "abstract · methods", size=FS_MOCK,
       color=INK_SOFT, ha="center")
@@ -226,7 +226,7 @@ AW, LW_, RW = 35.0, 27.0, 49.0
 # bars) - only the section headings are words, since those are what stage 1
 # recovers and what the model is handed.
 ay1, ah1 = BAND_BOT, BAND_TOP - BAND_BOT
-eyebrow(ax1, ay1 + ah1 + 2.0, "INPUT 1 · ARTICLE TEXT")
+eyebrow(ax1, ay1 + ah1 + 2.0, "INPUT 1 · PARSED TEXT")
 PAPER_RULE = "#9AA8B4"   # the page edge - darker than a card, so it reads as a sheet
 GREEK = "#D5DDE4"        # greeked body copy
 FOLD = 3.4
@@ -309,9 +309,9 @@ label(gx, ly + 7.4, "LLM", size=FS_CARD, color="white",
       weight="bold", ha="center", z=6)
 ax.plot([lx + 2.8, lx + LW_ - 2.8], [ly + 5.9, ly + 5.9], color="#4A5B67",
         lw=1.0, zorder=6)
-label(gx, ly + 3.9, '"You are an expert in', size=FS_MOCK, color="#D3DBE2",
+label(gx, ly + 3.9, '"You are an expert', size=FS_MOCK, color="#D3DBE2",
       ha="center", style="italic", z=6)
-label(gx, ly + 1.6, 'neuroimaging extraction …"', size=FS_MOCK,
+label(gx, ly + 1.6, 'information-extraction …"', size=FS_MOCK,
       color="#D3DBE2", ha="center", style="italic", z=6)
 
 # Input 2 - schema. Categories run as rows, not columns: at this type size three
@@ -321,17 +321,18 @@ label(gx, ly + 1.6, 'neuroimaging extraction …"', size=FS_MOCK,
 s2_h = 16.0
 s2_y = BAND_TOP - s2_h
 eyebrow(sx2, s2_y + s2_h + 2.0, "INPUT 2 · SCHEMA")
-top = card_header(sx2, s2_y, RW, s2_h, "14 target variables · 3 categories",
+top = card_header(sx2, s2_y, RW, s2_h, "14 target variables (Table 2)",
                   CHIP, size=FS_MOCK)
+# Category names as in Table 2 of the paper, shortened to their first word.
 CATEGORIES = [
-    ("Bibliographic", BIBLIO, "PMID · study type · …"),
-    ("Technical", TECH, "imaging method · measures · …"),
-    ("Anatomical", ANAT, "WM tracts · effects · …"),
+    ("Study", BIBLIO, "article type · dementia focus · …"),
+    ("Technical", TECH, "imaging modality · use of DTI · …"),
+    ("Anatomical", ANAT, "WM tracts · group differences · …"),
 ]
 for i, (name, col, items) in enumerate(CATEGORIES):
-    yy = top - 2.9 - i * 3.9
+    yy = top - 2.6 - i * 3.6
     label(sx2 + 2.6, yy, name, size=FS_MOCK, color=col, weight="bold")
-    label(sx2 + 18.5, yy, items, size=FS_MOCK, color=INK_SOFT)
+    label(sx2 + 16.0, yy, items, size=FS_MOCK, color=INK_SOFT)
 
 # Input 3 - the controlled vocabulary, shown as a few of its tract names. Pills
 # are sized to their text and flow left to right, wrapping at the card edge; the
@@ -340,8 +341,8 @@ s3_y = BAND_BOT
 s3_h = s2_y - 5.6 - s3_y
 eyebrow(sx2, s3_y + s3_h + 2.0, "INPUT 3 · CONTROLLED VOCABULARY")
 box(sx2, s3_y, RW, s3_h)
-TRACTS = ["Cingulum bundle", "Corticospinal tract",
-          "Superior longitudinal fasciculus"]
+TRACTS = ["cingulum cingulate", "arcuate fasciculus",
+          "superior longitudinal fasciculus"]     # vocabulary labels, verbatim
 PILL_PAD, PILL_GAP, PILL_H, ROW_STEP = 1.8, 1.4, 3.4, 4.6
 renderer = fig.canvas.get_renderer()
 to_data = ax.transData.inverted()
@@ -395,21 +396,19 @@ box(ox, oy, ow, oh)
 arrow(lx + LW_ / 2, ly - 1.4, lx + LW_ / 2, oy + oh + 1.4)
 
 JSON_LINES = [
-    [("{", TECH, "bold")],
-    [('  "pmid"', BIBLIO, "normal"), (': "16005548",  ', INK, "normal"),
-     ('"study_type"', BIBLIO, "normal"), (': ["original"],  ', INK, "normal"),
-     ('"subjects"', BIBLIO, "normal"), (': ["human"],', INK, "normal")],
-    [('  "diseases"', BIBLIO, "normal"),
-     (': ["Alzheimer\'s disease", "mild cognitive impairment"],', INK,
-      "normal")],
-    [('  "imaging_modality"', TECH, "normal"), (': ["DTI"],  ', INK, "normal"),
-     ('"software"', TECH, "normal"), (': ["SPM99"],  ', INK, "normal"),
-     ('"diffusion_measures"', TECH, "normal"), (': ["FA", "AD"],', INK,
-                                                "normal")],
-    [('  "wm_tracts"', ANAT, "normal"),
-     (': ["superior longitudinal fasciculus", "cingulum bundle", '
-      '"corticospinal tract"]', INK, "normal")],
-    [("}", TECH, "bold")],
+    [("{", INK, "bold")],
+    [('  "study_type"', BIBLIO, "normal"), (': ["single study"],  ', INK, "normal"),
+     ('"Human_study"', BIBLIO, "normal"), (': ["yes"],  ', INK, "normal"),
+     ('"Dementia_study"', BIBLIO, "normal"), (': ["yes"],', INK, "normal")],
+    [('  "Disease_study"', BIBLIO, "normal"),
+     (': ["Alzheimers Disease", "Mild Cognitive Impairment"],', INK, "normal")],
+    [('  "imaging_modalities"', TECH, "normal"), (': ["diffusion MRI", "Anatomical MRI"],  ', INK, "normal"),
+     ('"DTI_study"', TECH, "normal"), (': ["yes"],  ', INK, "normal"),
+     ('"diffusion_measures"', TECH, "normal"), (': ["FA", "MD"],', INK, "normal")],
+    [('  "whitematter_tracts"', ANAT, "normal"),
+     (': ["arcuate fasciculus", "cingulum cingulate", '
+      '"Internal capsule", …],  …', INK, "normal")],
+    [("}", INK, "bold")],
 ]
 yy = oy + oh - 3.2
 for line in JSON_LINES:
@@ -422,8 +421,5 @@ for line in JSON_LINES:
         bb = t.get_window_extent().transformed(ax.transData.inverted())
         xx = bb.x1
     yy -= (oh - 5.6) / (len(JSON_LINES) - 1)
-
-fig.suptitle("From literature to structured white-matter records",
-             fontsize=FS_TITLE, y=0.988)
 
 out = S.save_figure(fig, str(FIGURES / "figure_s2_pipeline.png"))
